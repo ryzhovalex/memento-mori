@@ -6,8 +6,7 @@ import HeaderComponent from '../components/HeaderComponent'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
-    <div className='bg-c60 w-full h-full text-white'>
+    <div className='bg-c60 w-screen h-screen text-white'>
       <Head>
         <title>Memento mori</title>
         <meta name="description" content="Check how many days you left" />
@@ -20,7 +19,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </div>
     </div>
-    </>
   )
 }
 

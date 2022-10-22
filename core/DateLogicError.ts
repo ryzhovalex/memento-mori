@@ -1,0 +1,1 @@
+export default class DateLogicError extends Error {}

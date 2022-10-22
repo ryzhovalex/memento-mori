@@ -1,3 +1,4 @@
+import DateLogicError from "./DateLogicError"
 import ShouldHaveDiedError from "./ShouldHaveDiedError"
 
 /**
@@ -10,7 +11,6 @@ import ShouldHaveDiedError from "./ShouldHaveDiedError"
 export default function getDaysLeft(
   birthTime: number, deadAge?: number
 ): number {
-  console.log("Calculate")
   deadAge = deadAge !== undefined ? deadAge : 90
 
   let birthDate: Date = new Date(birthTime * 1000)
@@ -38,18 +38,25 @@ export default function getDaysLeft(
   )
 
   // Discard dead date normalized time value to get correct days difference
-  // deadDate.setUTCHours(0)
-  // deadDate.setUTCMinutes(0)
+  deadDate.setUTCHours(0)
+  deadDate.setUTCMinutes(0)
   deadDate.setUTCSeconds(1)
-  // deadDate.setUTCMilliseconds(0)
+  deadDate.setUTCMilliseconds(0)
 
-  console.log(birthDate.toUTCString())
-  console.log(deadDate.toUTCString())
-  console.log(currentDate.toUTCString())
+  // console.log(birthDate.toUTCString())
+  // console.log(deadDate.toUTCString())
+  // console.log(currentDate.toUTCString())
+
+  const currentTime: number = currentDate.getTime() / 1000
+  const deadTime: number = deadDate.getTime() / 1000
+
+  if (birthTime > currentTime) {
+    throw new DateLogicError("Birth time cannot be bigger than current time")
+  }
 
   // Also add +1 days to count birthday itself
   let daysDiff: number = Math.ceil(
-    (deadDate.getTime() - currentDate.getTime()) / 1000 / 3600 / 24
+    (deadTime - currentTime) / 3600 / 24
   ) + 1
 
   if (daysDiff > 0) {

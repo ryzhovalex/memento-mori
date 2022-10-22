@@ -41,8 +41,25 @@ export default function handler(
       } else {
         deadAge = undefined
       }
-      res.status(200).json({"daysLeft": getDaysLeft(birthTime, deadAge)})
-      break
+
+      try {
+        const daysLeft: number = getDaysLeft(birthTime, deadAge)
+        res.status(200).json({"daysLeft": daysLeft})
+      } catch (error) {
+        if (error instanceof Error) {
+          res.status(400).json({
+            "message": error.message,
+            "type": "Error"
+          })
+        } else {
+          res.status(500).json({
+            "message": "Unrecognized catched error type",
+            "type": "Error"
+          })
+        }
+      } finally {
+        break
+      }
     default:
       res.status(405).json({"message": "Method not allowed", "type": "Error"})
   }

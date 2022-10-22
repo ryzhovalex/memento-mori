@@ -2,18 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  width: 100%;
-  height: 100%;
-}
-
-/* Nested next.js div should take up whole available space */
-body > div {
-  width: 100%;
-  height: 100%;
-}
