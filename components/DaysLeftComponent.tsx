@@ -25,6 +25,12 @@ export default function DaysLeftComponent() {
       key={Math.random()}
     />
 
+    // Clear days display on any error occured
+    const daysLeftElement: HTMLElement | null =
+      document.getElementById("days_left")
+    if (daysLeftElement) 
+      daysLeftElement.innerText = ""
+
     // Add alert
     setAlerts([...alerts, alert]) 
   }
@@ -52,7 +58,7 @@ export default function DaysLeftComponent() {
 
     const resultJson: any = await response.json()
 
-    let daysLeft: number | undefined = undefined
+    let daysLeft: number
 
     if (typeof resultJson.daysLeft === "number") {
       daysLeft = resultJson.daysLeft
@@ -65,9 +71,24 @@ export default function DaysLeftComponent() {
       return
     }
 
+    // Days left are calculated according to UTC time. Here we need to adjust
+    // it to local time of the client - if client has been reached the new day
+    // and:
+    //  - negative from UTC, add one more day
+    //  - if positive - subtract one day
+    const clientDate: Date = new Date()
+    if (clientDate.getDate() > clientDate.getUTCDate()) {
+      daysLeft--;
+    } else if (clientDate.getDate() < clientDate.getUTCDate()) {
+      daysLeft++;
+    }
+
+    if (daysLeft == 0) {
+      showErrorAlert("You should have died yesterday, isn't it?")
+    }
+
     const daysLeftElement: HTMLElement | null =
       document.getElementById("days_left")
-
     if (daysLeftElement) {
       if (daysLeft) {
         daysLeftElement.innerText = daysLeft.toString()
