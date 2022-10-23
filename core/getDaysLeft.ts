@@ -28,14 +28,14 @@ export default function getDaysLeft(
 
   // Imagine situation when person dies right at acquiring their dead age -
   // i.e. on birthday
-  let deadDate: Date = new Date(
+  let deadDate: Date = new Date(Date.UTC(
     birthDate.getUTCFullYear() + deadAge,
     birthDate.getUTCMonth(),
     birthDate.getUTCDate(),
     birthDate.getUTCHours(),
     birthDate.getMinutes(),
     birthDate.getUTCSeconds()
-  )
+  ))
 
   // Discard dead date normalized time value to get correct days difference
   deadDate.setUTCHours(0)
@@ -54,14 +54,18 @@ export default function getDaysLeft(
     throw new DateLogicError("Birth time cannot be bigger than current time")
   }
 
-  // Also add +1 days to count birthday itself
-  let daysDiff: number = Math.ceil(
+  // Result of division should be floored, since we want to count last birth
+  // day
+  let daysDiff: number = Math.floor(
     (deadTime - currentTime) / 3600 / 24
   ) + 1
 
   if (daysDiff > 0) {
     return daysDiff;
   } else {
+    // Display zero days correctly in context of returned error message
+    if (daysDiff == 0)
+      daysDiff = 1
     throw new ShouldHaveDiedError(
       `You should have died ${Math.abs(daysDiff)} days ago.`
       + " Not sure that it's true"
