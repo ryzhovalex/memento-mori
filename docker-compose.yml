@@ -1,0 +1,8 @@
+version: "3"
+services:
+  memento-mori:
+    container_name: memento-mori
+    build: ./
+    restart: unless-stopped
+    ports:
+      - 4000:3000
